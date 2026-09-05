@@ -86,7 +86,10 @@ if(fs.existsSync(publicDir)){
         res.sendFile(path.join(publicDir,"index.html"),(err)=>next(err))
     })
 }
-app.post("/api/webhooks/clerk",async(req,res)=>{
+app.post(
+    "/api/webhooks/clerk",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
     try {
         const signinSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET
         if(!signinSecret){
@@ -106,7 +109,10 @@ app.post("/api/webhooks/clerk",async(req,res)=>{
         const evt = await verifyWebhook(request,{signinSecret})
 
         if(evt.type === "user.created"||evt.type === "user.updated"){
+            
             const u=evt.data
+            console.log(u);
+            
             const email = 
             u.email_addresses?.find((e)=>e.id === u.primary_email_address_id)?.email_address??
             u.email_addresses?.[0]?.email_address
