@@ -8,7 +8,6 @@ const path = require("path")
 
 const {verifyWebhook} = require("@clerk/backend/webhooks")
 const app = express()
-app.use(express.json())
 
 
 const FRONTEND_URL = process.env.FRONTEND_URL
@@ -137,6 +136,8 @@ app.post(
         })
     }
 })
+app.use(express.json())
+
 app.get("/health", (req, res) => {
     res.status(200).send("NexaChat backend is running");
 });
