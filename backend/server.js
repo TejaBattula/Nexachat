@@ -90,8 +90,8 @@ app.post(
     express.raw({ type: "application/json" }),
     async (req, res) => {
     try {
-        const signinSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET
-        if(!signinSecret){
+        const signingSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET
+        if(!signingSecret){
             res.status(503).json({
                 message : "Webhook secret is not provided!"
                 
@@ -105,7 +105,7 @@ app.post(
             body : payload
         })
 
-        const evt = await verifyWebhook(request,{signinSecret})
+        const evt = await verifyWebhook(request,{signingSecret})
 
         if(evt.type === "user.created"||evt.type === "user.updated"){
             
@@ -121,7 +121,8 @@ app.post(
 
             await User.findOneAndUpdate(
                 {clerkId:u.id},
-                {clerkId:u.id,email,fullName,profilepic : u.image_url}
+                {clerkId:u.id,email,fullName,profilepic : u.image_url},
+                {upsert : true,new : true}
             )
         }
         if(evt.type === "user.deleted"){
