@@ -9,7 +9,7 @@ const path = require("path")
 const app = express()
 const FRONTEND_URL = process.env.FRONTEND_URL
 
-const publicDir = path.join(process.cwd(),"public")
+const publicDir = path.join(__dirname, "../frontend/dist")
 
 app.use(express.json())
 app.use(cors({
@@ -88,7 +88,8 @@ app.get("/",(req,res)=>{
     res.send("hi i am nexchat backend");
     
 })
-app.listen(3000,()=>{
-    console.log("Server run on port number 3000!");
-    
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT,()=>{
+    console.log(`Server run on port number ${PORT}!`);
 })
